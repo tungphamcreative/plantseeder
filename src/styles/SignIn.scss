@@ -1,0 +1,18 @@
+.SignInBox {
+    width: 500px;
+    display: flex;
+    justify-content: center;
+
+
+}
+
+.SignInForm {
+    width: 100%;
+    padding: 20px 40px;
+    display: flex;
+    flex-direction: column;
+
+    .tung {
+        background-color: red;
+    }
+}
