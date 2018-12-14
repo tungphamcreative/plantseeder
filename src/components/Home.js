@@ -1,5 +1,6 @@
 import React from 'react';
 import { AuthUserContext } from './Session';
+import { Redirect } from 'react-router'
 
 import SignOut from './SignOutButton';
 
@@ -8,7 +9,11 @@ const Home = () => (
         <SignOut />
         <AuthUserContext.Consumer>
             {authUser =>
-                console.log(authUser)}
+                authUser ?
+                "hello"
+                :
+                <Redirect to="/signin" />               
+            }
         </AuthUserContext.Consumer>
     </div>
 )

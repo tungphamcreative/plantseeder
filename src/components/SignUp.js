@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import { Redirect } from 'react-router'
 import Card from '@material-ui/core/Card';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -9,13 +10,21 @@ import { compose } from 'recompose';
 import '../styles/SignUp.scss';
 
 import { withFirebase } from './Firebase';
+import { AuthUserContext } from './Session';
 
 const SignUpPage = () => (
-    <section className="CenterLayout">
-        <Card className="SignUpBox">
-            <SignUpForm />
-        </Card>
-    </section>
+    <AuthUserContext.Consumer>
+        {
+            authUser => 
+            authUser ? <Redirect to="/" />
+            :
+            <section className="CenterLayout">
+                <Card className="SignUpBox">
+                    <SignUpForm />
+                </Card>
+            </section>
+        }
+    </AuthUserContext.Consumer>
 );
 
 const INITIAL_STATE = {

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import { Redirect } from 'react-router'
 import Card from '@material-ui/core/Card';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -36,7 +37,7 @@ class ForgotPasswordFormBase extends Component {
             .doPasswordReset(email)
             .then(() => {
                 this.setState({ ...INITIAL_STATE });
-                this.props.history.push('/home');
+                <Redirect to="/signin" />
             })
             .catch(error => {
                 this.setState({ error });

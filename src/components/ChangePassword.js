@@ -1,21 +1,29 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import { Redirect } from 'react-router'
 import Card from '@material-ui/core/Card';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import '../styles/ChangePassword.scss';
 
 import { withFirebase } from './Firebase';
+import { AuthUserContext } from './Session';
 
 const ChangePasswordPage = () => (
-    <section className="CenterLayout">
-        <Card className="ChangePasswordBox">
-            <ChangePasswordForm />
-        </Card>
-    </section>
+    <AuthUserContext.Consumer>
+        {
+            authUser => 
+            authUser ? 
+            <section className="CenterLayout">
+                <Card className="ChangePasswordBox">
+                    <ChangePasswordForm />
+                </Card>
+            </section>
+            : <Redirect to="/" />
+        }
+    </AuthUserContext.Consumer>
 );
 
 const INITIAL_STATE = {
@@ -37,7 +45,7 @@ class ChangePasswordFormBase extends Component {
             .doPasswordChange(password, password2)
             .then(() => {
                 this.setState({ ...INITIAL_STATE });
-                this.props.history.push('/home');
+                <Redirect to="/" />
             })
             .catch(error => {
                 this.setState({ error });
@@ -69,7 +77,7 @@ class ChangePasswordFormBase extends Component {
                 <div className="actions">
                     <Button variant="contained" color="primary" type="submit" disabled={isInvalid}>Change password</Button>
                 </div>
-                {error && <p style={{color: 'red'}}>{error.message}</p>}
+                {error && <p style={{ color: 'red' }}>{error.message}</p>}
             </form>
         );
     }
