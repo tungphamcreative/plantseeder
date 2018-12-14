@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import '../styles/SignIn.scss';
-import '../styles/Common.scss';
 
 import { withFirebase } from './Firebase';
 
@@ -48,7 +47,6 @@ class SignInFormBase extends Component {
     };
 
     onChange = event => {
-        console.log(event.target.name);
         this.setState({ [event.target.name]: event.target.value});
     };
 
@@ -66,7 +64,7 @@ class SignInFormBase extends Component {
                     <Button variant="contained" color="primary" type="submit" disabled={isInvalid}>Log in</Button>
                     <Link to="/signup">Don't have a account?</Link>
                 </div>
-                {error && <p>{error.message}</p>}
+                {error && <p style={{color: 'red'}}>{error.message}</p>}
             </form>
         );
     }
