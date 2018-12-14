@@ -1,8 +1,15 @@
 import React from 'react';
+import { AuthUserContext } from './Session';
+
+import SignOut from './SignOutButton';
 
 const Home = () => (
     <div>
-        Hello Home!
+        <SignOut />
+        <AuthUserContext.Consumer>
+            {authUser =>
+                console.log(authUser)}
+        </AuthUserContext.Consumer>
     </div>
 )
 
