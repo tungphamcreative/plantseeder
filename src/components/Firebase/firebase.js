@@ -1,6 +1,6 @@
 import app from 'firebase/app';
 import 'firebase/auth';
-import 'firebase/database';
+import 'firebase/firestore';
 
 const config = {
     apiKey: "AIzaSyBTAZmvIR-g0W0336mPvpXoYtXRDB3HkKY",
@@ -16,6 +16,7 @@ class Firebase {
         app.initializeApp(config);
         this.auth = app.auth();
         this.db = app.firestore();
+        this.db.settings({timestampsInSnapshots: true});
     }
 
     // *** Auth API ***
@@ -32,6 +33,14 @@ class Firebase {
 
     doPasswordChange = password =>
         this.auth.currentUser.updatePassword(password);
+
+    // *** Plant API ***
+    
+    doGetUserInformation = (id) =>
+        this.db.collection('users').doc(id);
+
+    doCreateNewPlantInformation = (id, data) => 
+        this.db.collection('users').doc(id).set(data);
 }
 
 export default Firebase;
