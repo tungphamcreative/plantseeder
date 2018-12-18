@@ -21,6 +21,7 @@ const HomePage = () => (
 
 const INITIAL_STATE = {
     level: 1,
+    experience: 0,
     money: 100,
     plants: []
 };
@@ -51,19 +52,42 @@ const PLANTS = [
 class HomePlantBase extends Component {
     constructor(props) {
         super(props);
-    }
-
-    handleChangePlant = () => {
-    }
-    render() {
-        let userInformation = {};
-        this.props.firebase.doGetUserInformation(this.props.uid).onSnapshot((doc) => {
-            if (doc.exists) {
-                userInformation = doc.data();
-            } else {
+        this.userInfo = this.props.firebase.doGetUserInformation(this.props.uid);
+        this.userInfo.get().then((doc) => {
+            if (!doc.exist) {
                 this.props.firebase.doCreateNewPlantInformation(this.props.uid, INITIAL_STATE);
             }
-        });
+        })
+        this.state = {
+            userData: {},
+            value: PLANTS[0]['name']
+        }
+    }
+
+    handleChangePlant = (e) => {
+        this.setState({ value: e.target.value });
+    }
+
+    handleAddPlant = (total) => {
+        const plant = PLANTS.filter((p) => {
+            return p.name === this.state.value;
+        })
+        plant[0].id = total + 1;
+        this.props.firebase.doAddNewPlantToUserInformation(this.props.uid, plant[0]);
+    }
+
+    onCollectionUpdate = (querySnapshot) => {
+        this.setState({
+            userData: querySnapshot.data()
+       });
+      }
+
+    componentDidMount() {
+        this.userInfo.onSnapshot(this.onCollectionUpdate);
+      }
+
+    render() {
+        let userInformation = this.state.userData;
         return (
             <div>
                 <div>
@@ -81,11 +105,11 @@ class HomePlantBase extends Component {
                     <select value={this.state.value} onChange={this.handleChangePlant}>
                         {
                             PLANTS.map((p, index) => {
-                                return <option key={index} value={p}>{p.name}</option>
+                                return <option key={index} value={p.name}>{p.name}</option>
                             })
                         }
                     </select>
-                    <button>choose</button>
+                    <button onClick={() => this.handleAddPlant(userInformation.plants.length)}>choose</button>
                 </div>
             </div>
         );

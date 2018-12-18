@@ -16,7 +16,7 @@ class Firebase {
         app.initializeApp(config);
         this.auth = app.auth();
         this.db = app.firestore();
-        this.db.settings({timestampsInSnapshots: true});
+        this.db.settings({ timestampsInSnapshots: true });
     }
 
     // *** Auth API ***
@@ -35,12 +35,16 @@ class Firebase {
         this.auth.currentUser.updatePassword(password);
 
     // *** Plant API ***
-    
-    doGetUserInformation = (id) =>
-        this.db.collection('users').doc(id);
 
-    doCreateNewPlantInformation = (id, data) => 
-        this.db.collection('users').doc(id).set(data);
+    doGetUserInformation = (uid) =>
+        this.db.collection('users').doc(uid);
+
+    doCreateNewPlantInformation = (uid, data) =>
+        this.db.collection('users').doc(uid).set(data);
+
+    doAddNewPlantToUserInformation = (uid, plant) => {
+        this.db.collection('users').doc(uid).update({ plants: app.firestore.FieldValue.arrayUnion(plant) });
+    }
 }
 
 export default Firebase;
