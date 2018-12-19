@@ -1,0 +1,19 @@
+.drawer {
+    width: 240px;
+    flex-shrink: 0;
+}
+
+.drawerContent {
+    flex-grow: 1;
+}
+
+.drawerPaper {
+    width: 240px;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    justify-content: space-between
+}

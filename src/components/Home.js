@@ -4,8 +4,6 @@ import { AuthUserContext } from './Session';
 import { Redirect } from 'react-router'
 import { compose } from 'recompose';
 
-import SignOutButton from './SignOutButton';
-
 const HomePage = () => (
     <div>
         <AuthUserContext.Consumer>
@@ -92,11 +90,10 @@ class HomePlantBase extends Component {
             <div>
                 <div>
                     Hello, {this.props.displayName || this.props.email}
-                    <SignOutButton />
                 </div>
                 <div>
                     {
-                        userInformation.plants && userInformation.plants.map((plant, index) => {
+                        userInformation && userInformation.plants && userInformation.plants.map((plant, index) => {
                             return <div key={index}>{plant.name}</div>
                         })
                     }
