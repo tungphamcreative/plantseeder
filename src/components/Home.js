@@ -20,8 +20,7 @@ const HomePage = () => (
 const INITIAL_STATE = {
     level: 1,
     experience: 0,
-    money: 100,
-    plants: []
+    money: 100
 };
 
 const PLANTS = [
@@ -51,13 +50,15 @@ class HomePlantBase extends Component {
     constructor(props) {
         super(props);
         this.userInfo = this.props.firebase.doGetUserInformation(this.props.uid);
+        this.plantInfo = this.props.firebase.doGetPlantInformation(this.props.uid);
         this.userInfo.get().then((doc) => {
             if (!doc.exist) {
-                this.props.firebase.doCreateNewPlantInformation(this.props.uid, INITIAL_STATE);
+                this.props.firebase.doCreateNewUserInformation(this.props.uid, INITIAL_STATE);
             }
         })
         this.state = {
             userData: {},
+            plantData: [],
             value: PLANTS[0]['name']
         }
     }
@@ -66,26 +67,37 @@ class HomePlantBase extends Component {
         this.setState({ value: e.target.value });
     }
 
-    handleAddPlant = (total) => {
+    handleAddPlant = () => {
         const plant = PLANTS.filter((p) => {
             return p.name === this.state.value;
         })
-        plant[0].id = total + 1;
-        this.props.firebase.doAddNewPlantToUserInformation(this.props.uid, plant[0]);
+        this.props.firebase.doAddNewPlant(this.props.uid, plant[0]);
     }
 
-    onCollectionUpdate = (querySnapshot) => {
+    onUserUpdate = (querySnapshot) => {
         this.setState({
             userData: querySnapshot.data()
-       });
-      }
+        });
+    }
+
+    onPlantUpdate = (querySnapshot) => {
+        let plants = [];
+        var self = this;
+        querySnapshot.forEach(function (doc) {
+            plants.push({ id: doc.id, ...doc.data() });
+        });
+        this.setState({
+            plantData: plants
+        });
+    }
 
     componentDidMount() {
-        this.userInfo.onSnapshot(this.onCollectionUpdate);
-      }
+        this.userInfo.onSnapshot(this.onUserUpdate);
+        this.plantInfo.onSnapshot(this.onPlantUpdate);
+        const intervalId = setInterval(this.updatePlantInfo, 1000);
+    }
 
     render() {
-        let userInformation = this.state.userData;
         return (
             <div>
                 <div>
@@ -93,8 +105,8 @@ class HomePlantBase extends Component {
                 </div>
                 <div>
                     {
-                        userInformation && userInformation.plants && userInformation.plants.map((plant, index) => {
-                            return <div key={index}>{plant.name}</div>
+                        this.state.plantData.map((plant, index) => {
+                            return <div key={index}>{`${plant.name} ${plant.growth} ${plant.life}`}</div>
                         })
                     }
                 </div>
@@ -106,7 +118,7 @@ class HomePlantBase extends Component {
                             })
                         }
                     </select>
-                    <button onClick={() => this.handleAddPlant(userInformation.plants.length)}>choose</button>
+                    <button onClick={this.handleAddPlant}>choose</button>
                 </div>
             </div>
         );

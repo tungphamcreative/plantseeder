@@ -39,11 +39,17 @@ class Firebase {
     doGetUserInformation = (uid) =>
         this.db.collection('users').doc(uid);
 
-    doCreateNewPlantInformation = (uid, data) =>
+    doGetPlantInformation = (uid) =>
+        this.db.collection('users').doc(uid).collection('plants');
+
+    doUpdatePlantInformation = (uid, pid, growth, life) =>
+    this.db.collection('users').doc(uid).collection('plants').doc(pid).update({growth, life});
+
+    doCreateNewUserInformation = (uid, data) =>
         this.db.collection('users').doc(uid).set(data);
 
-    doAddNewPlantToUserInformation = (uid, plant) => {
-        this.db.collection('users').doc(uid).update({ plants: app.firestore.FieldValue.arrayUnion(plant) });
+    doAddNewPlant = (uid, plant) => {
+        this.db.collection('users').doc(uid).collection('plants').add({ ...plant,  created: app.firestore.FieldValue.serverTimestamp()});
     }
 }
 
