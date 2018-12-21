@@ -40,10 +40,10 @@ class Firebase {
         this.db.collection('users').doc(uid);
 
     doGetPlantInformation = (uid) =>
-        this.db.collection('users').doc(uid).collection('plants');
+        this.db.collection('users').doc(uid).collection('plants').orderBy('created');
 
     doUpdatePlantInformation = (uid, pid, growth, life) =>
-    this.db.collection('users').doc(uid).collection('plants').doc(pid).update({growth, life});
+        this.db.collection('users').doc(uid).collection('plants').doc(pid).update({growth, life});
 
     doCreateNewUserInformation = (uid, data) =>
         this.db.collection('users').doc(uid).set(data);

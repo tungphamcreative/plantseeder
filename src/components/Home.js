@@ -4,6 +4,9 @@ import { AuthUserContext } from './Session';
 import { Redirect } from 'react-router'
 import { compose } from 'recompose';
 
+import Plant from './Plant';
+
+import '../styles/Home.scss';
 const HomePage = () => (
     <div>
         <AuthUserContext.Consumer>
@@ -26,21 +29,25 @@ const INITIAL_STATE = {
 const PLANTS = [
     {
         name: 'Rose',
-        lifeTime: 100,
-        life: 100,
-        growthTime: 10,
+        lifeTime: 20,
+        life: 20,
+        growthTime: 60,
         growth: 0,
         isPoison: false,
+        isDeath: false,
+        isDone: false,
         money: 10,
         experience: 5
     },
     {
         name: 'Lily',
-        lifeTime: 50,
-        life: 50,
-        growthTime: 20,
+        lifeTime: 10,
+        life: 10,
+        growthTime: 30,
         growth: 0,
         isPoison: false,
+        isDeath: false,
+        isDone: false,
         money: 20,
         experience: 15
     }
@@ -74,6 +81,17 @@ class HomePlantBase extends Component {
         this.props.firebase.doAddNewPlant(this.props.uid, plant[0]);
     }
 
+    handleUpdatePlant = () => {
+        this.state.plantData.forEach((plant) => {
+            let { id, life, growth, growthTime } = plant;
+            if (life > 0 && growth <= growthTime) {
+                growth++;
+                life--;
+                this.props.firebase.doUpdatePlantInformation(this.props.uid, id, growth, life);
+            }
+        })
+    }
+
     onUserUpdate = (querySnapshot) => {
         this.setState({
             userData: querySnapshot.data()
@@ -82,8 +100,7 @@ class HomePlantBase extends Component {
 
     onPlantUpdate = (querySnapshot) => {
         let plants = [];
-        var self = this;
-        querySnapshot.forEach(function (doc) {
+        querySnapshot.forEach((doc) => {
             plants.push({ id: doc.id, ...doc.data() });
         });
         this.setState({
@@ -94,19 +111,24 @@ class HomePlantBase extends Component {
     componentDidMount() {
         this.userInfo.onSnapshot(this.onUserUpdate);
         this.plantInfo.onSnapshot(this.onPlantUpdate);
-        const intervalId = setInterval(this.updatePlantInfo, 1000);
+        const intervalId = setInterval(this.handleUpdatePlant, 1000);
+        this.setState({ intervalId: intervalId });
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.state.intervalId);
     }
 
     render() {
         return (
-            <div>
-                <div>
+            <div className="HomePage">
+                <div className="UserInfo">
                     Hello, {this.props.displayName || this.props.email}
                 </div>
-                <div>
+                <div className="PlantGarden">
                     {
                         this.state.plantData.map((plant, index) => {
-                            return <div key={index}>{`${plant.name} ${plant.growth} ${plant.life}`}</div>
+                            return <Plant key={index} plant={plant} />
                         })
                     }
                 </div>

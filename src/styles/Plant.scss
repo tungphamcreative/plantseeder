@@ -1,0 +1,29 @@
+.plantCard {
+    max-width: 300px;
+    width: 300px;
+    margin: 15px;
+    .plantInfo {
+        display: flex;
+        align-items: center;
+        .iconHeart {
+            color: #f50057;
+        }
+        .iconGrowth {
+            color: #3f51b5;
+        }
+        .progress {
+            width: 90%;
+        }
+    }
+    .plantProgress {
+        padding-top: 15px;
+        > div {
+            
+            align-items: center;
+        }
+    }
+}
+
+.plantImage {
+    height: 140px;
+}
