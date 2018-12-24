@@ -4,8 +4,13 @@ import { AuthUserContext } from './Session';
 import { Redirect } from 'react-router'
 import { compose } from 'recompose';
 
-import Plant from './Plant';
+import Button from '@material-ui/core/Button';
 
+import Plant from './Plant';
+import UserInfo from './UserInfomation';
+import Seed from './Seed';
+import PLANTS from './SeedList';
+import Noti from './Snackbar';
 import '../styles/Home.scss';
 const HomePage = () => (
     <div>
@@ -26,33 +31,6 @@ const INITIAL_STATE = {
     money: 100
 };
 
-const PLANTS = [
-    {
-        name: 'Rose',
-        lifeTime: 20,
-        life: 20,
-        growthTime: 60,
-        growth: 0,
-        isPoison: false,
-        isDeath: false,
-        isDone: false,
-        money: 10,
-        experience: 5
-    },
-    {
-        name: 'Lily',
-        lifeTime: 10,
-        life: 10,
-        growthTime: 30,
-        growth: 0,
-        isPoison: false,
-        isDeath: false,
-        isDone: false,
-        money: 20,
-        experience: 15
-    }
-]
-
 class HomePlantBase extends Component {
     constructor(props) {
         super(props);
@@ -66,7 +44,9 @@ class HomePlantBase extends Component {
         this.state = {
             userData: {},
             plantData: [],
-            value: PLANTS[0]['name']
+            value: PLANTS[0]['name'],
+            openNoti: false,
+            messageNoti: '',
         }
     }
 
@@ -78,18 +58,37 @@ class HomePlantBase extends Component {
         const plant = PLANTS.filter((p) => {
             return p.name === this.state.value;
         })
+        if (this.state.userData.money <= plant[0].money) {
+            this.setState({ openNoti: true, messageNoti: "You don't have enough money." });
+        }
         this.props.firebase.doAddNewPlant(this.props.uid, plant[0]);
     }
 
     handleUpdatePlant = () => {
         this.state.plantData.forEach((plant) => {
-            let { id, life, growth, growthTime } = plant;
-            if (life > 0 && growth <= growthTime) {
+            let { id, life, growth, growthTime, isDone, isDeath } = plant;
+            if (life === 0 && !isDeath) {
+                isDeath = true;
+                this.props.firebase.doUpdatePlantInformation(this.props.uid, id, growth, life, isDeath, isDone);
+            }
+            if (growth === growthTime && !isDone) {
+                isDone = true;
+                this.props.firebase.doUpdatePlantInformation(this.props.uid, id, growth, life, isDeath, isDone);
+            }
+            if (!isDeath && !isDone) {
                 growth++;
                 life--;
-                this.props.firebase.doUpdatePlantInformation(this.props.uid, id, growth, life);
+                this.props.firebase.doUpdatePlantInformation(this.props.uid, id, growth, life, isDeath, isDone);
             }
         })
+    }
+
+    handleRestorePlantHeath = (pid, life) => {
+        this.props.firebase.doRestorePlantHeath(this.props.uid, pid, life);
+    }
+
+    handleRemovePlant = pid => {
+        this.props.firebase.doRemovePlant(this.props.uid, pid);
     }
 
     onUserUpdate = (querySnapshot) => {
@@ -108,6 +107,10 @@ class HomePlantBase extends Component {
         });
     }
 
+    handleCloseNoti = () => {
+        this.setState({ openNoti: false });
+    }
+
     componentDidMount() {
         this.userInfo.onSnapshot(this.onUserUpdate);
         this.plantInfo.onSnapshot(this.onPlantUpdate);
@@ -123,25 +126,26 @@ class HomePlantBase extends Component {
         return (
             <div className="HomePage">
                 <div className="UserInfo">
-                    Hello, {this.props.displayName || this.props.email}
+                    <UserInfo name={this.props.displayName || this.props.email} {...this.state.userData} />
+                </div>
+                <div className="SeedInfo">
+                    Choose your seed:
+                    <Seed value={this.state.value} onChange={this.handleChangePlant} PLANTS={PLANTS} />
+                    <Button variant="contained" onClick={this.handleAddPlant}>Seed</Button>
                 </div>
                 <div className="PlantGarden">
                     {
                         this.state.plantData.map((plant, index) => {
-                            return <Plant key={index} plant={plant} />
+                            return <Plant
+                                key={index}
+                                plant={plant}
+                                restoreHeath={this.handleRestorePlantHeath}
+                                removePlant={this.handleRemovePlant}
+                            />
                         })
                     }
                 </div>
-                <div>
-                    <select value={this.state.value} onChange={this.handleChangePlant}>
-                        {
-                            PLANTS.map((p, index) => {
-                                return <option key={index} value={p.name}>{p.name}</option>
-                            })
-                        }
-                    </select>
-                    <button onClick={this.handleAddPlant}>choose</button>
-                </div>
+                <Noti open={this.state.openNoti} handleClose={this.handleCloseNoti} message={this.state.messageNoti} />
             </div>
         );
     }

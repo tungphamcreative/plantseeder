@@ -12,15 +12,17 @@ import HeartIcon from '@material-ui/icons/Favorite';
 import GrowthIcon from '@material-ui/icons/LocalFlorist';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import '../styles/Plant.scss';
-const Plant = ({ plant }) => {
+const Plant = ({ plant, restoreHeath, removePlant }) => {
     return (
-        <Card className="plantCard">
+        <Card className={'plantCard' + (plant.isDone ? ' donePlant' : '')}>
             <CardActionArea>
                 <CardMedia
                     className="plantImage"
-                    image="src/img/rose.jpg"
+                    image={plant.image}
                     title="Plant Image"
-                />
+                >
+                    <div className={plant.isDeath ? 'deathPlant' : ''}></div>
+                </CardMedia>
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="h2">
                         {plant.name}
@@ -42,13 +44,22 @@ const Plant = ({ plant }) => {
                 </CardContent>
             </CardActionArea>
             <CardActions>
-                <Button size="small" color="primary">
+                <Button
+                    size="small"
+                    color="primary"
+                    onClick={() => restoreHeath(plant.id, plant.lifeTime)}
+                    disabled={plant.isDeath || plant.isDone}
+                >
                     Water
                 </Button>
-                <Button size="small" color="primary">
+                <Button
+                    size="small"
+                    color="primary"
+                    disabled={plant.isDeath || !plant.isDone}
+                >
                     Collect
                 </Button>
-                <Button size="small" color="primary">
+                <Button size="small" color="primary" onClick={() => removePlant(plant.id)}>
                     Remove
                 </Button>
             </CardActions>

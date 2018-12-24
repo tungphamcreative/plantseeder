@@ -1,24 +1,34 @@
 .plantCard {
+    &.donePlant {
+        border: solid 1px green;
+    }
+
     max-width: 300px;
     width: 300px;
     margin: 15px;
+
     .plantInfo {
         display: flex;
         align-items: center;
+
         .iconHeart {
             color: #f50057;
         }
+
         .iconGrowth {
             color: #3f51b5;
         }
+
         .progress {
             width: 90%;
         }
     }
+
     .plantProgress {
         padding-top: 15px;
-        > div {
-            
+
+        >div {
+
             align-items: center;
         }
     }
@@ -26,4 +36,10 @@
 
 .plantImage {
     height: 140px;
+}
+
+.deathPlant {
+    background-color: rgba(53, 53, 53, 0.7);
+    width: 100%;
+    height: 100%;
 }

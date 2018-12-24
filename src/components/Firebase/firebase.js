@@ -42,8 +42,8 @@ class Firebase {
     doGetPlantInformation = (uid) =>
         this.db.collection('users').doc(uid).collection('plants').orderBy('created');
 
-    doUpdatePlantInformation = (uid, pid, growth, life) =>
-        this.db.collection('users').doc(uid).collection('plants').doc(pid).update({growth, life});
+    doUpdatePlantInformation = (uid, pid, growth, life, isDeath, isDone) =>
+        this.db.collection('users').doc(uid).collection('plants').doc(pid).update({growth, life, isDeath, isDone});
 
     doCreateNewUserInformation = (uid, data) =>
         this.db.collection('users').doc(uid).set(data);
@@ -51,6 +51,12 @@ class Firebase {
     doAddNewPlant = (uid, plant) => {
         this.db.collection('users').doc(uid).collection('plants').add({ ...plant,  created: app.firestore.FieldValue.serverTimestamp()});
     }
+
+    doRestorePlantHeath = (uid, pid, life) => 
+        this.db.collection('users').doc(uid).collection('plants').doc(pid).update({life});
+    
+    doRemovePlant = (uid, pid) => 
+        this.db.collection('users').doc(uid).collection('plants').doc(pid).delete();
 }
 
 export default Firebase;
