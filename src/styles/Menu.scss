@@ -15,5 +15,16 @@
     display: flex;
     flex-direction: column;
     height: 100vh;
-    justify-content: space-between
+
+    h1 {
+        display: flex;
+        color: grey;
+        justify-content: space-around;
+        align-items: center;
+        padding: 0 5px;
+
+    }
+    .signOutButton {
+        margin-top: auto;
+    }
 }

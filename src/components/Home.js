@@ -37,7 +37,7 @@ class HomePlantBase extends Component {
         this.userInfo = this.props.firebase.doGetUserInformation(this.props.uid);
         this.plantInfo = this.props.firebase.doGetPlantInformation(this.props.uid);
         this.userInfo.get().then((doc) => {
-            if (!doc.exist) {
+            if (!doc.exists) {
                 this.props.firebase.doCreateNewUserInformation(this.props.uid, INITIAL_STATE);
             }
         })
@@ -58,10 +58,18 @@ class HomePlantBase extends Component {
         const plant = PLANTS.filter((p) => {
             return p.name === this.state.value;
         })
-        if (this.state.userData.money <= plant[0].money) {
+        if (this.state.userData.money < plant[0].money) {
             this.setState({ openNoti: true, messageNoti: "You don't have enough money." });
+        } else {
+            const { money, experience, level } = this.state.userData;
+            const moneyLeft = money - plant[0].money;
+            this.handleUpdateUserInformation(moneyLeft, experience, level);
+            this.props.firebase.doAddNewPlant(this.props.uid, plant[0]);
         }
-        this.props.firebase.doAddNewPlant(this.props.uid, plant[0]);
+    }
+
+    handleUpdateUserInformation = (money, exp, lv) => {
+        this.props.firebase.doUpdateUserInformation(this.props.uid, money, exp, lv);
     }
 
     handleUpdatePlant = () => {
@@ -89,6 +97,23 @@ class HomePlantBase extends Component {
 
     handleRemovePlant = pid => {
         this.props.firebase.doRemovePlant(this.props.uid, pid);
+    }
+
+    handleCollectPlant = (plant) => {
+        let { money, experience, level } = this.state.userData;
+        const rate = (plant.life / plant.lifeTime);
+        const gain = Math.round((plant.money * 2) * rate);
+        money += gain;
+        if ((experience + plant.experience) >= 100) {
+            experience += plant.experience;
+            experience -= 100;
+            level++;
+        }
+        else {
+            experience += plant.experience;
+        }
+        this.handleUpdateUserInformation(money, experience, level);
+        this.handleRemovePlant(plant.id);
     }
 
     onUserUpdate = (querySnapshot) => {
@@ -123,6 +148,9 @@ class HomePlantBase extends Component {
     }
 
     render() {
+        const plant = PLANTS.filter((p) => {
+            return p.name === this.state.value;
+        })
         return (
             <div className="HomePage">
                 <div className="UserInfo">
@@ -133,6 +161,9 @@ class HomePlantBase extends Component {
                     <Seed value={this.state.value} onChange={this.handleChangePlant} PLANTS={PLANTS} />
                     <Button variant="contained" onClick={this.handleAddPlant}>Seed</Button>
                 </div>
+                <div>
+                    {`(Cost: ${plant[0].money}$ you will get ${plant[0].experience} experience and ${plant[0].money * 2}$ if plant is full health)`}
+                </div>
                 <div className="PlantGarden">
                     {
                         this.state.plantData.map((plant, index) => {
@@ -141,6 +172,7 @@ class HomePlantBase extends Component {
                                 plant={plant}
                                 restoreHeath={this.handleRestorePlantHeath}
                                 removePlant={this.handleRemovePlant}
+                                collectPlant={this.handleCollectPlant}
                             />
                         })
                     }

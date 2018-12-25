@@ -12,7 +12,7 @@ import HeartIcon from '@material-ui/icons/Favorite';
 import GrowthIcon from '@material-ui/icons/LocalFlorist';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import '../styles/Plant.scss';
-const Plant = ({ plant, restoreHeath, removePlant }) => {
+const Plant = ({ plant, restoreHeath, removePlant, collectPlant }) => {
     return (
         <Card className={'plantCard' + (plant.isDone ? ' donePlant' : '')}>
             <CardActionArea>
@@ -43,7 +43,7 @@ const Plant = ({ plant, restoreHeath, removePlant }) => {
                     </div>
                 </CardContent>
             </CardActionArea>
-            <CardActions>
+            <CardActions className="cardAction">
                 <Button
                     size="small"
                     color="primary"
@@ -55,6 +55,7 @@ const Plant = ({ plant, restoreHeath, removePlant }) => {
                 <Button
                     size="small"
                     color="primary"
+                    onClick={() => collectPlant(plant)}
                     disabled={plant.isDeath || !plant.isDone}
                 >
                     Collect

@@ -6,7 +6,8 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import MyPlantIcon from '@material-ui/icons/ChangeHistory';
-import ThreeSixtyIcon  from '@material-ui/icons/ThreeSixty';
+import ThreeSixtyIcon from '@material-ui/icons/ThreeSixty';
+import GrowthIcon from '@material-ui/icons/LocalFlorist';
 import SignOutButton from './SignOutButton';
 import '../styles/Menu.scss';
 
@@ -21,9 +22,9 @@ const Menu = () => {
             anchor="left"
         >
             <div className="menu">
+                <h1><GrowthIcon /><span>Plant Seeder</span><GrowthIcon /></h1>
+                <Divider />
                 <div>
-                    <h1>Plant Seeder</h1>
-                    <Divider />
                     <List component="nav">
                         <ListItem button component="a" href="#">
                             <ListItemIcon>
