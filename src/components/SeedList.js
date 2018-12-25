@@ -10,7 +10,7 @@ const PLANTS = [
         isDone: false,
         money: 40,
         experience: 25,
-        image: 'src/img/rose.jpg'
+        image: 'img/rose.jpg'
     },
     {
         name: 'Lily',
@@ -23,7 +23,7 @@ const PLANTS = [
         isDone: false,
         money: 30,
         experience: 30,
-        image: 'src/img/lily.jpg'
+        image: 'img/lily.jpg'
     },
     {
         name: 'African Daisy',
@@ -36,7 +36,7 @@ const PLANTS = [
         isDone: false,
         money: 20,
         experience: 15,
-        image: 'src/img/africandaisy.jpg'
+        image: 'img/africandaisy.jpg'
     },
     {
         name: 'Lavender',
@@ -49,7 +49,7 @@ const PLANTS = [
         isDone: false,
         money: 50,
         experience: 50,
-        image: 'src/img/lavender.jpg'
+        image: 'img/lavender.jpg'
     },
     {
         name: 'Sunflower',
@@ -62,7 +62,7 @@ const PLANTS = [
         isDone: false,
         money: 10,
         experience: 10,
-        image: 'src/img/sunflower.jpg'
+        image: 'img/sunflower.jpg'
     }
 ];
 
