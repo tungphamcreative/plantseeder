@@ -10,7 +10,7 @@ const PLANTS = [
         isDone: false,
         money: 40,
         experience: 25,
-        image: 'img/rose.jpg'
+        image: 'https://firebasestorage.googleapis.com/v0/b/plantseeder-creative.appspot.com/o/rose.jpg?alt=media&token=575c4d0b-b9c5-4482-b5d6-299b4077a396'
     },
     {
         name: 'Lily',
@@ -23,7 +23,7 @@ const PLANTS = [
         isDone: false,
         money: 30,
         experience: 30,
-        image: 'img/lily.jpg'
+        image: 'https://firebasestorage.googleapis.com/v0/b/plantseeder-creative.appspot.com/o/lily.jpg?alt=media&token=df72e566-1f8e-43bd-a62d-89f451e40bbc'
     },
     {
         name: 'African Daisy',
@@ -36,7 +36,7 @@ const PLANTS = [
         isDone: false,
         money: 20,
         experience: 15,
-        image: 'img/africandaisy.jpg'
+        image: 'https://firebasestorage.googleapis.com/v0/b/plantseeder-creative.appspot.com/o/africandaisy.JPG?alt=media&token=7c64247a-e0e6-403a-80b8-e9a8cba3fe21'
     },
     {
         name: 'Lavender',
@@ -49,7 +49,7 @@ const PLANTS = [
         isDone: false,
         money: 50,
         experience: 50,
-        image: 'img/lavender.jpg'
+        image: 'https://firebasestorage.googleapis.com/v0/b/plantseeder-creative.appspot.com/o/lavender.jpg?alt=media&token=5d457341-f32f-49c9-a7e4-4c404bcb1e68'
     },
     {
         name: 'Sunflower',
@@ -62,7 +62,7 @@ const PLANTS = [
         isDone: false,
         money: 10,
         experience: 10,
-        image: 'img/sunflower.jpg'
+        image: 'https://firebasestorage.googleapis.com/v0/b/plantseeder-creative.appspot.com/o/sunflower.jpg?alt=media&token=cd08d56d-fcbf-42bd-b40c-590e777effaa'
     }
 ];
 
